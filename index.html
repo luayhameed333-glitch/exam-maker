@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d5c4a">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>منسّق الأسئلة الامتحانية</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;700&family=Reem+Kufi:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Lalezar&family=El+Messiri:wght@400;700&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f1ea;--card:#fff;--tx:#222;--bd:#d8d2c4;--ac:#1d5c4a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1d1c;--card:#262928;--tx:#eee;--bd:#444;--ac:#4fb394}}
+:root[data-theme="dark"]{--bg:#1b1d1c;--card:#262928;--tx:#eee;--bd:#444;--ac:#4fb394}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Arial,Tahoma,sans-serif;padding:12px 12px 80px}
+h2{margin:4px 0 10px;font-size:18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px}.chips button{padding:6px 12px}.chips button.on{background:var(--ac);color:#fff}
+summary{cursor:pointer;font-weight:700;font-size:15px;padding:2px 0}
+details.card{padding:8px 12px;margin-bottom:8px}
+details.card[open]>summary{margin-bottom:6px}
+label{font-size:12px;opacity:.8;display:block;margin-bottom:2px}
+input,textarea,select{width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);font:inherit;font-size:15px}
+input[type=checkbox]{width:auto}input[type=range]{padding:0}
+textarea{min-height:150px;max-height:75vh;resize:vertical;line-height:1.7;font-size:16px}
+.q{border:1px dashed var(--bd);border-radius:10px;padding:8px;margin-bottom:8px}
+.row{display:flex;gap:8px;align-items:center;margin:6px 0;flex-wrap:wrap}
+button{font:inherit;padding:9px 14px;border-radius:8px;border:1px solid var(--ac);background:var(--ac);color:#fff;cursor:pointer}
+button.o{background:transparent;color:var(--ac)}
+label.btn{display:inline-block;width:auto;font-size:15px;opacity:1;margin:0;padding:9px 14px;border-radius:8px;border:1px solid var(--ac);color:var(--ac);cursor:pointer}
+label.btn.sm{padding:3px 9px;font-size:14px;line-height:1.4}
+button.d{background:transparent;color:#c0392b;border-color:#c0392b;padding:6px 10px}
+.hint{font-size:12px;opacity:.75;margin:4px 0 8px;line-height:1.7}
+.sw{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0}
+.sw b{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);cursor:pointer;display:inline-block}
+.sw b.on{outline:3px solid var(--ac);outline-offset:2px}
+.sheet{display:flex;justify-content:center;background:#8a8a8a;border-radius:10px;padding:8px 0;overflow:hidden}
+.wrap{position:relative}
+.page{-webkit-print-color-adjust:exact;print-color-adjust:exact;width:210mm;height:297mm;background:#fff;color:#000;padding:10mm;transform-origin:top right;position:absolute;overflow:hidden;right:0;top:0}
+.paper{-webkit-user-select:text;user-select:text;position:relative;z-index:1;height:277mm;border:5px double currentColor;padding:7mm 8mm;font-size:15px;line-height:1.85;font-weight:700;display:flex;flex-direction:column;overflow:hidden}
+.wmk{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:0;overflow:hidden}
+.hd{display:flex;justify-content:space-between;align-items:flex-start}
+.hd>div{flex:1}.hd .c{text-align:center}.hd .l{padding-inline-start:14mm}
+.hd img{height:18mm;width:auto;max-width:100%}
+.hr{border-top:2px solid currentColor;margin:6px 0 12px;width:88%;margin-inline-start:auto}
+.note{text-align:center;margin:6px 0 12px}
+.qt{margin-top:4px}
+.it{padding-inline-start:12px}
+.inl{padding-inline-start:12px}.inl span{margin-inline-end:10px}
+.qi{text-align:center;margin:6px 0}.qi img{max-width:100%;height:auto;object-fit:contain}
+.sep{border-top:1.5px solid currentColor;margin:10px 4% 8px 8%}
+.ft{direction:rtl;display:flex;justify-content:space-between;margin-top:auto;padding-top:14px;font-size:.95em}
+@page{size:A4;margin:0}
+@media print{
+ html,body{background:#fff;padding:0;margin:0}.card,h2,.noprint{display:none!important}
+ .sheet{background:#fff;padding:0;display:block;border-radius:0;overflow:visible}
+ .wrap{width:210mm!important;height:auto!important}
+ .page{transform:none!important;position:relative!important;top:0!important}
+ .page+.page{break-before:page;page-break-before:always}
+}
+</style>
+</head>
+<body>
+<h2 style="margin-bottom:2px">📝 منسّق الأسئلة الامتحانية</h2>
+<div class="noprint" style="font-size:12px;opacity:.9;margin:0 0 10px;line-height:2">
+ <div>إعداد الأستاذ لؤي حميد الياسري</div>
+ <div>📱 <a href="tel:07811112210" style="color:inherit">07811112210</a> _ <a href="tel:07766111122" style="color:inherit">07766111122</a></div>
+ <div style="display:flex;flex-wrap:wrap;gap:2px 14px;align-items:center"><a href="https://www.facebook.com/share/1EpfyiWwtj/" target="_blank" rel="noopener" style="display:inline-flex;gap:4px;align-items:center;color:inherit;text-decoration:none"><svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path fill="#fff" d="M13.4 19.5v-6.3h2.1l.4-2.5h-2.5V9.1c0-.7.3-1.3 1.4-1.3h1.2V5.6c-.2 0-1-.1-1.9-.1-1.9 0-3.2 1.2-3.2 3.3v1.9H8.8v2.5H11v6.3h2.4z"/></svg><span dir="ltr">luyysri</span></a><a href="https://wa.me/9647811112210" target="_blank" rel="noopener" style="display:inline-flex;gap:4px;align-items:center;color:inherit;text-decoration:none"><svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#25D366"/><path fill="none" stroke="#fff" stroke-width="1.6" d="M12 5.2a6.8 6.8 0 0 0-5.8 10.3L5.2 18.8l3.4-1a6.8 6.8 0 1 0 3.4-12.6z"/><path fill="#fff" d="M9.6 8.9c.2-.3.5-.3.7-.2l.8 1.4c.1.2 0 .4-.1.6l-.4.5c.6 1.1 1.5 1.9 2.6 2.4l.5-.5c.2-.2.4-.2.6-.1l1.4.8c.2.1.2.4.1.7-.4.9-1.3 1.3-2.2 1-2.3-.7-4.2-2.5-4.8-4.8-.1-.6 0-1.1.8-1.8z"/></svg><span dir="ltr">luyysri</span></a><a href="https://t.me/luyysri" target="_blank" rel="noopener" style="display:inline-flex;gap:4px;align-items:center;color:inherit;text-decoration:none"><svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#229ED9"/><path fill="#fff" d="M5.2 11.7l12-4.7c.6-.2 1 .1.9.9l-2 9.6c-.1.7-.6.9-1.1.5l-3-2.2-1.5 1.4c-.2.2-.3.3-.6.3l.2-3.1 5.6-5c.2-.2-.1-.3-.4-.1l-6.9 4.4-3-.9c-.6-.2-.6-.6.1-.9z"/></svg><span dir="ltr">luyysri</span></a><a href="https://www.instagram.com/luyysri?stkn=NjIxY243enpud2Nq" target="_blank" rel="noopener" style="display:inline-flex;gap:4px;align-items:center;color:inherit;text-decoration:none"><svg width="18" height="18" viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#feda75"/><stop offset=".4" stop-color="#ee2a7b"/><stop offset="1" stop-color="#5851db"/></linearGradient></defs><rect width="24" height="24" rx="6" fill="url(#ig)"/><rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="16.2" cy="7.8" r="1" fill="#fff"/></svg><span dir="ltr">luyysri</span></a><a href="https://www.tiktok.com/@luyysri?_r=1&amp;_t=ZS-9ABxPDfC8F3" target="_blank" rel="noopener" style="display:inline-flex;gap:4px;align-items:center;color:inherit;text-decoration:none"><svg width="18" height="18" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#000"/><path fill="#25F4EE" transform="translate(-.6 -.5)" d="M15.2 5.5c.3 1.6 1.3 2.7 3 2.9v2.3c-1.1 0-2.1-.3-3-.9v4.7a4.2 4.2 0 1 1-4.2-4.2c.3 0 .6 0 .8.1v2.4a1.9 1.9 0 1 0 1.1 1.7V5.5h2.3z"/><path fill="#FE2C55" transform="translate(.6 .5)" d="M15.2 5.5c.3 1.6 1.3 2.7 3 2.9v2.3c-1.1 0-2.1-.3-3-.9v4.7a4.2 4.2 0 1 1-4.2-4.2c.3 0 .6 0 .8.1v2.4a1.9 1.9 0 1 0 1.1 1.7V5.5h2.3z"/><path fill="#fff" d="M15.2 5.5c.3 1.6 1.3 2.7 3 2.9v2.3c-1.1 0-2.1-.3-3-.9v4.7a4.2 4.2 0 1 1-4.2-4.2c.3 0 .6 0 .8.1v2.4a1.9 1.9 0 1 0 1.1 1.7V5.5h2.3z"/></svg><span dir="ltr">luyysri</span></a></div>
+</div>
+
+<details class="card noprint"><summary>⚙️ قالب الأسئلة (اللغة والشعار والبيانات)</summary>
+ <div class="grid" style="margin-top:8px">
+  <div><label>لغة الورقة / Language</label><select id="lg" onchange="setL()"><option value="ar">العربية</option><option value="en">English</option></select></div>
+  <div><label>شعار المدرسة</label><div class="row" style="margin:0"><label class="btn sm"><input type="file" accept="image/*" style="display:none" onchange="load(this,'logo')">🖼️ إضافة</label><button class="d" onclick="Logo='';prev()">✕</button></div></div>
+ </div>
+ <b style="display:block;margin-top:10px">بيانات القالب</b>
+ <div class="grid" style="margin-top:6px">
+  <div><label>الإدارة</label><input id="r1" value="إدارة"></div>
+
+  <div><label>اسم المدرسة</label><input id="r2" value=""></div>
+  <div><label>نوع الامتحان</label><input id="c2" value="أسئلة امتحانات "></div>
+  <div><label>العام الدراسي</label><input id="c3" value=""></div>
+  <div><label>الدور / الشهر</label><div class="row" style="margin:0;flex-wrap:nowrap"><select id="c4w" onchange="setC4()"><option value="الدور">الدور</option><option value="الشهر">الشهر</option><option value="">—</option></select><select id="c4n" onchange="setC4()"><option value="الأول">الأول</option><option value="الثاني">الثاني</option><option value="الثالث">الثالث</option><option value="">—</option></select></div><input id="c4" type="hidden" value="الدور الأول"></div>
+  <div><label>المادة</label><input id="l1" value=""></div>
+  <div><label>الصف</label><input id="l2" value=""></div>
+  <div><label>الوقت</label><input id="l3" value=""></div>
+  <div><label>التاريخ</label><input id="l4" value=""></div>
+ </div>
+ <div style="margin-top:8px"><label>الملاحظة</label><input id="nt" value=""></div>
+ <div style="margin-top:8px"><label>نوع خط الملاحظة (اختياري)</label><select id="nl" onchange="F.nl=this.value;prev()">
+  <option value="none">بدون خط</option><option value="u">تحته خط</option><option value="ud">تحته خط مزدوج</option><option value="us">خط متقطع</option><option value="ut">خط منقط</option><option value="uw">خط متموج</option>
+  <option value="box">داخل إطار</option><option value="rbox">إطار دائري الحواف</option><option value="dbox">إطار مزدوج</option><option value="lines">خط فوقها وتحتها</option></select></div>
+ <div class="hint">لإلغاء الملاحظة بالكامل امسح نصها.</div>
+ <b style="display:block;margin-top:12px">الصفحات</b>
+ <select id="pgm" onchange="F.pm=this.value;fit()" style="margin-top:6px"><option value="auto">تلقائي: تنتقل الأسئلة لصفحة جديدة عند امتلاء الورقة</option><option value="one">صفحة واحدة فقط (يصغّر الخط ليناسب)</option></select>
+ <div class="hint">بالوضع التلقائي يبقى اسم المدرس والخاتمة بنهاية آخر صفحة، وإذا قلّلت النص ترجع الأسئلة لصفحة واحدة.</div>
+ <b style="display:block;margin-top:12px">الخاتمة</b>
+ <div class="grid" style="margin-top:6px">
+  <div style="grid-column:1/-1"><label>عبارة الخاتمة (تكون دائماً يمين الاسم)</label><input id="ft1" value=""></div>
+  <div><label>عنوان الاسم</label><input id="ft2" value="مدرس المادة"></div>
+  <div><label>الاسم</label><input id="tn" value=""></div>
+ </div>
+</details>
+
+<details class="card noprint"><summary>🎨 الخط والألوان والحجم ولون الورقة</summary>
+ <b style="display:none">تنسيق الخط</b>
+ <div class="grid" style="margin-top:8px">
+  <div><label>نوع الخط</label><select id="ff" onchange="setF()">
+   <option value="Arial">Arial</option><option value="Tahoma">Tahoma</option>
+   <option value="'Times New Roman'">Times New Roman</option>
+   <option value="'Traditional Arabic'">Traditional Arabic</option>
+   <option value="Cairo">Cairo</option><option value="Amiri">Amiri (نسخ)</option><option value="Tajawal">Tajawal</option><option value="'Reem Kufi'">Reem Kufi (كوفي)</option><option value="'Aref Ruqaa'">Aref Ruqaa (رقعة)</option><option value="Lalezar">Lalezar (عريض)</option><option value="'El Messiri'">El Messiri</option></select></div>
+  <div><label>السمك</label><select id="fw" onchange="setF()"><option value="400">عادي</option><option value="700">عريض</option></select></div>
+ </div>
+ <label style="margin-top:10px">اللون</label>
+ <div class="sw" id="sw"></div>
+ <label style="margin-top:8px">لون الورقة (الخلفية)</label>
+ <div class="sw" id="sw3"></div>
+ <label style="margin-top:8px">الحجم: <b id="fsv"></b></label>
+ <div class="row"><button class="o" onclick="sz(-1)">A−</button>
+  <input type="range" id="fr" min="8" max="26" step="0.5" style="flex:1" oninput="F.size=+this.value;F.auto=false;$('fa').checked=false;fit()">
+  <button class="o" onclick="sz(1)">A+</button></div>
+ <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="fa" onchange="F.auto=this.checked;fit()"> حجم تلقائي (بوضع صفحة واحدة فقط)</label>
+ <label style="margin-top:8px">هوامش الورقة (بُعد الإطار عن حافة الورقة)</label>
+ <div class="chips" id="mgb"></div>
+ <label>التباعد بين الأسطر</label>
+ <div class="chips" id="lsb"></div>
+</details>
+
+<details class="card noprint"><summary>🖼️ الإطار والعلامة المائية</summary>
+ <div class="grid" style="margin-top:8px">
+  <div><label>نوع الإطار</label><select id="bs" onchange="F.bs=this.value;fit()">
+   <option value="none">بدون إطار</option><option value="solid">خط مفرد</option><option value="double">خط مزدوج</option>
+   <option value="dashed">متقطع</option><option value="dotted">منقط</option><option value="groove">محفور</option><option value="ridge">بارز</option><option value="round">زوايا دائرية</option><option value="round2">دائري مزدوج</option><option value="thinthick">سميك + رفيع</option><option value="triple">ثلاثي الخطوط</option><option value="shadow">بظل</option><option value="dia">زخرفة معينات</option><option value="cir">زخرفة دوائر</option><option value="star">زخرفة نجوم</option><option value="sq">زخرفة مربعات</option></select></div>
+  <div><label>سمك الإطار</label><input type="range" id="bw" min="1" max="14" step="1" oninput="F.bw=+this.value;fit()"></div>
+ </div>
+ <label style="margin-top:10px">نص العلامة المائية (اتركه فارغاً لإلغائها)</label>
+ <input id="wt" placeholder="مثال: إعدادية العدالة" oninput="F.wt=this.value;fit()">
+ <label style="margin-top:8px">لون العلامة المائية</label>
+ <div class="sw" id="sw4"></div>
+ <div class="grid" style="margin-top:8px">
+  <div><label>الشفافية (قوة الظهور)</label><input type="range" id="wo" min="3" max="50" oninput="F.wo=+this.value;fit()"></div>
+  <div><label>الحجم</label><input type="range" id="wz" min="20" max="120" oninput="F.wz=+this.value;fit()"></div>
+  <div><label>خط العلامة</label><select id="wf" onchange="F.wf=this.value;fit()"><option value="Arial">Arial</option><option value="Tahoma">Tahoma</option><option value="'Times New Roman'">Times New Roman</option><option value="Cairo">Cairo</option><option value="Amiri">Amiri (نسخ)</option><option value="Tajawal">Tajawal</option><option value="'Reem Kufi'">Reem Kufi (كوفي)</option><option value="'Aref Ruqaa'">Aref Ruqaa (رقعة)</option><option value="Lalezar">Lalezar (عريض)</option><option value="'El Messiri'">El Messiri</option></select></div>
+  <div><label>الاتجاه</label><select id="wr" onchange="F.wr=+this.value;fit()"><option value="-30">مائل</option><option value="0">أفقي</option><option value="-90">عمودي</option></select></div>
+  <div><label>صورة كعلامة مائية</label><div class="row" style="margin:0"><label class="btn sm"><input type="file" accept="image/*" style="display:none" onchange="load(this,'wm')">🖼️ اختر</label><button class="d" onclick="F.wmi='';fit()">✕</button></div></div>
+ </div>
+</details>
+
+<div class="card noprint">
+ <b>الأسئلة</b>
+ <div class="hint">السطر الأول = نص السؤال. السطر الذي يبدأ بـ <b>-</b> فقرة مرقمة (1- 2-)، والذي يبدأ بـ <b>*</b> فقرة (أ/ ب/ أو A/ B/).</div>
+ <div id="qs"></div>
+ <button class="o" onclick="addQ()">+ سؤال جديد</button>
+</div>
+
+<details class="card noprint" id="tb" style="position:fixed;left:12px;right:12px;bottom:8px;z-index:20;margin:0;box-shadow:0 2px 12px rgba(0,0,0,.3)">
+ <summary><span id="tbm">✂️ تنسيق الجزء المحدد (من الأسئلة أو من الورقة)</span></summary>
+ <div class="sw" id="sw2" style="margin-top:8px"></div>
+ <div class="row" style="margin:0">
+  <button class="o" onmousedown="event.preventDefault()" onclick="wrap('z=125')">A+</button>
+  <button class="o" onmousedown="event.preventDefault()" onclick="wrap('z=80')">A−</button>
+  <button class="o" onmousedown="event.preventDefault()" onclick="wrap('b')"><b>B</b></button>
+  <button class="o" onmousedown="event.preventDefault()" onclick="wrap('n')">عادي</button>
+  <button class="o" onmousedown="event.preventDefault()" onclick="wrap('u')"><u>U</u></button>
+  <button class="d" onmousedown="event.preventDefault()" onclick="unwrap()">مسح</button>
+ </div>
+</details>
+
+<div class="noprint" style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap"><button onclick="window.print()">🖨️ طباعة / حفظ PDF</button><button class="d" id="rsb" onclick="askReset(this)">🔄 تفريغ المحتوى</button></div>
+
+<div class="sheet"><div class="wrap" id="wrap"></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const LB={ar:{b:'باســـمه تعــــالى',s:'المادة',c:'الصف',t:'الوقت',d:'التاريخ',q:'س',l:'النجاح والتوفيق حليفكم',tn:'مدرس المادة',L:['أ','ب','ج','د','هـ','و','ز','ح']},
+ en:{b:'',s:'Subject',c:'Class',t:'Time',d:'Date',q:'Q',l:'Good luck',tn:'Teacher',L:['A','B','C','D','E','F','G','H']}};
+const BGS=['#ffffff','#fffdf5','#fff8e1','#fdf6e3','#fff3cd','#ffe9d6','#fdecea','#fde2ec','#f3e8fd','#e8eaf6','#e8f4fd','#d6eaf8','#e0f7fa','#e9f7ef','#e6f4d7','#f1f8e9','#eeeeee','#dcdcdc','#2b2b2b','#0f2a43'];
+const COLS=['#000000','#1f3a93','#1d5c4a','#8b0000','#6a1b9a','#e67e22','#555555','#0b7285','#d4a017','#ffffff'];
+let Q=[
+{t:"",inl:true,img:'',isz:50},
+{t:"علل خمساً مما يأتي:\n- الادخار يؤدي الى اكتفاء الدولة تدريجيا.\n- لا تعتبر الموارد غير النادرة مثل الهواء موارد اقتصادية.",inl:false,img:'',isz:50}];
+let FV=null,Logo='',lang='ar',F={size:15,auto:true,family:'Arial',weight:'700',color:'#000000'},target=null;
+try{const s=JSON.parse(localStorage.getItem('exam3')||'null');if(s){Q=s.Q;Logo=s.Logo||'';lang=s.lang||'ar';F=s.F||F;FV=s.fv||null;if((s.v||0)<3&&FV)['c3','l2','r2','ft1'].forEach(k=>{FV[k]=''});if((s.v||0)<4&&FV){FV.l3='';FV.nt='ملاحظة:'}if(FV&&FV.nt==='ملاحظة:')FV.nt='';if(FV&&FV.r1==='إدارة ثانوية')FV.r1='إدارة';if((s.v||0)<7&&FV&&!(FV.c2||'').trim())FV.c2='أسئلة امتحانات ';if(!s.v&&Q[0])Q[0].t=''}}catch(e){}
+
+F=Object.assign({wt:'',wo:15,wz:60,wr:-30,bs:'double',bw:5,bg:'#ffffff',wmi:'',wc:'#000000',wf:'Cairo',nl:'none',mg:10,ls:1.85,p2:false,pb:1,pm:'auto'},F);
+function grow(t){t.style.height='auto';t.style.height=Math.max(150,Math.min(t.scrollHeight+4,window.innerHeight*0.75))+'px'}
+const WCOLS=['#ffffff','#000000','#555555','#999999','#c0392b','#1f3a93','#1d5c4a','#6a1b9a','#e67e22','#d4a017','#0b7285'];
+function patUri(t,c){
+ let m;
+ if(t==='dia')m='<polygon points="15,3 27,15 15,27 3,15" fill="'+c+'"/>';
+ else if(t==='cir')m='<circle cx="15" cy="15" r="10" fill="'+c+'"/>';
+ else if(t==='sq')m='<rect x="5" y="5" width="20" height="20" fill="none" stroke="'+c+'" stroke-width="4"/>';
+ else{let p=[];for(let i=0;i<16;i++){const a=Math.PI*i/8-Math.PI/2,r=i%2?7:13;p.push((15+r*Math.cos(a)).toFixed(1)+','+(15+r*Math.sin(a)).toFixed(1))}m='<polygon points="'+p.join(' ')+'" fill="'+c+'"/>'}
+ let g='';for(let y=0;y<3;y++)for(let x=0;x<3;x++)if(!(x===1&&y===1))g+='<g transform="translate('+x*30+','+y*30+')">'+m+'</g>';
+ return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="90" height="90">'+g+'</svg>')}
+function frame(p){
+ const col=F.color,bg=F.bg||'#ffffff',w=F.bw,t=F.bs;
+ p.style.border='none';p.style.borderImage='none';p.style.boxShadow='none';p.style.borderRadius='0';
+ if(t==='none')return;
+ if(['dia','cir','star','sq'].indexOf(t)>-1){const W=Math.max(10,w*2);p.style.border=W+'px solid '+col;p.style.borderImage='url("'+patUri(t,col)+'") 30 round';return}
+ const st=t==='round'?'solid':t==='round2'?'double':['thinthick','triple','shadow'].indexOf(t)>-1?'solid':t;
+ p.style.border=w+'px '+st+' '+col;
+ if(t==='round'||t==='round2')p.style.borderRadius='22px';
+ if(t==='thinthick')p.style.boxShadow='inset 0 0 0 3px '+bg+', inset 0 0 0 5px '+col;
+ if(t==='triple')p.style.boxShadow='inset 0 0 0 3px '+bg+', inset 0 0 0 5px '+col+', inset 0 0 0 8px '+bg+', inset 0 0 0 10px '+col;
+ if(t==='shadow')p.style.boxShadow='6px 6px 0 '+col}
+function noteSty(){
+ const m={none:'',u:'text-decoration:underline',ud:'text-decoration:underline double',us:'text-decoration:underline dashed',ut:'text-decoration:underline dotted',uw:'text-decoration:underline wavy',
+ box:'border:1.5px solid currentColor;padding:2px 14px;display:table;margin:6px auto 12px',
+ rbox:'border:1.5px solid currentColor;border-radius:20px;padding:2px 16px;display:table;margin:6px auto 12px',
+ dbox:'border:4px double currentColor;padding:2px 14px;display:table;margin:6px auto 12px',
+ lines:'border-top:1.5px solid currentColor;border-bottom:1.5px solid currentColor;padding:2px 0'};
+ return m[F.nl]||''}
+function applyWM(){
+ document.querySelectorAll('.wmk').forEach(w=>{w.style.opacity=F.wo/100;w.style.transform='rotate('+F.wr+'deg)';
+ w.innerHTML=(F.wmi?'<img src="'+F.wmi+'" style="width:'+(F.wz*4)+'px;max-width:90%">':'')+(F.wt?'<div style="font-size:'+F.wz+'px;color:'+F.wc+';white-space:nowrap;font-weight:700;font-family:'+F.wf+',Arial,sans-serif">'+esc(F.wt)+'</div>':'')})}
+let curFont=15,MODEL={head:'',blocks:[],ft:''};
+const IAQ=new WeakSet();
+function mkPage(){
+ const pg=document.createElement('div');pg.className='page';
+ pg.innerHTML='<div class="wmk"></div><div class="paper"></div>';
+ $('wrap').appendChild(pg);
+ const p=pg.querySelector('.paper');
+ p.dir=lang==='ar'?'rtl':'ltr';
+ p.style.fontFamily=F.family+",Arial,sans-serif";p.style.fontWeight=F.weight;p.style.color=F.color;
+ frame(p);p.style.lineHeight=F.ls;p.style.height=(297-2*F.mg)+'mm';p.style.fontSize=curFont+'px';
+ pg.style.padding=F.mg+'mm';pg.style.background=F.bg||'#ffffff';
+ return p}
+function ovf(p){return p.scrollHeight>p.clientHeight+1}
+function layout(){
+ $('wrap').innerHTML='';
+ let f=F.size;curFont=f;
+ let p=mkPage();
+ p.insertAdjacentHTML('beforeend','<div class="blk">'+MODEL.head+'</div>');
+ if(F.pm==='one'){
+  p.insertAdjacentHTML('beforeend',MODEL.blocks.map(b=>'<div class="blk">'+b+'</div>').join('')+MODEL.ft);
+  if(F.auto){while(ovf(p)&&f>8){f-=0.5;curFont=f;p.style.fontSize=f+'px'}}
+ }else{
+  MODEL.blocks.forEach(b=>{
+   p.insertAdjacentHTML('beforeend','<div class="blk">'+b+'</div>');
+   if(ovf(p)&&p.querySelectorAll('.blk').length>1){const el=p.lastElementChild;el.remove();p=mkPage();p.appendChild(el)}});
+  p.insertAdjacentHTML('beforeend',MODEL.ft);
+  if(ovf(p)){
+   const fe=p.lastElementChild;fe.remove();
+   const bl=p.querySelectorAll('.blk');
+   if(bl.length>1){const last=bl[bl.length-1];last.remove();p=mkPage();p.appendChild(last);p.appendChild(fe)}
+   else{p=mkPage();p.appendChild(fe)}}
+ }
+ applyWM();scal();
+}
+function load(inp,t){
+ const f=inp.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{const im=new Image();im.onload=()=>{
+  const m=900,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');
+  c.width=im.width*k;c.height=im.height*k;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+  const u=c.toDataURL('image/jpeg',0.8);
+  if(t==='logo')Logo=u;else if(t==='wm')F.wmi=u;else{Q[t].img=u;Q[t].ia=c.width/c.height}
+  draw()};im.src=r.result};
+ r.readAsDataURL(f)}
+
+function addQ(){Q.push({t:"",inl:false,img:'',isz:50});draw()}
+function del(i){Q.splice(i,1);draw()}
+function draw(){
+ const L=LB[lang];
+ $('qs').innerHTML=Q.map((q,i)=>`<div class="q"><div class="row"><b style="flex:1">${L.q}${i+1}</b>
+ <label style="margin:0;display:flex;gap:4px;align-items:center"><input type="checkbox" ${q.inl?'checked':''} onchange="Q[${i}].inl=this.checked;prev()"> فقرات بسطر</label>
+ <label class="btn sm" title="${q.img?'تغيير الصورة':'إضافة صورة'}"><input type="file" accept="image/*" style="display:none" onchange="load(this,${i})">🖼️</label>
+ <button class="d" onclick="del(${i})">حذف</button></div>
+ <textarea dir="auto" oninput="Q[${i}].t=this.value;grow(this);prev()">${esc(q.t)}</textarea>
+ ${q.img?`<div class="row" style="margin:4px 0 0;font-size:12px"><span>🖼️ حجم الصورة</span><input type="range" min="15" max="100" value="${q.isz}" style="width:110px;padding:0" oninput="Q[${i}].isz=+this.value;prev()"><button class="d" style="padding:1px 8px" onclick="Q[${i}].img='';draw()">✕</button></div>`:''}</div>`).join('');
+ document.querySelectorAll('#qs textarea').forEach(grow);
+ prev();
+}
+function prev(){
+ const v=id=>fmt(esc($(id).value)),L=LB[lang];
+ const vs=id=>'<span data-f="'+id+'">'+v(id)+'</span>';
+ const head=`<div class="hd"><div>${vs('r1')}<br>${vs('r2')}</div>
+ <div class="c">${Logo?`<img src="${Logo}"><br>`:''}${L.b}${L.b?'<br>':''}${vs('c2')}<br>${vs('c3')}<br>${vs('c4')}</div>
+ <div class="l">${L.s}: ${vs('l1')}<br>${L.c}: ${vs('l2')}<br>${L.t}: ${vs('l3')}<br>${L.d}: ${vs('l4')}</div></div>
+ <div class="hr"></div>${$('nt').value.trim()?`<div class="note" dir="auto" style="${noteSty()}">${vs('nt')}</div>`:''}`;
+ const blocks=[];
+ Q.forEach((q,i)=>{
+  const ls=q.t.split('\n').map((t,j)=>({t:t,j:j})).filter(x=>x.t.trim());
+  const so=(ls.length&&!/^[-*]/.test(ls[0].t.trim()))?ls.shift():null;
+  const sp=(o,off,txt)=>'<span data-q="'+i+'" data-l="'+o.j+'" data-o="'+off+'">'+fmt(esc(txt))+'</span>';
+  let n=0,k=0,it=[];
+  ls.forEach(o=>{const l=o.t,s=l.trim(),lead=l.length-l.trimStart().length;
+   if(s[0]==='-'||s[0]==='*'){
+    const rest=l.slice(lead+1),off=lead+1+(rest.length-rest.trimStart().length),c=s.slice(1).trim();
+    it.push((s[0]==='-'?(++n)+'- ':(L.L[k++]||k)+'/ ')+sp(o,off,c))}
+   else it.push(sp(o,lead,s))});
+  const stem=`<div class="qt" dir="auto">${L.q}${i+1}/ ${so?sp(so,0,so.t):''}</div>`;
+  const qb=[];
+  if(q.inl&&it.length)qb.push(stem+`<div class="inl" dir="auto">${it.map(x=>`<span>${x}</span>`).join('')}</div>`);
+  else{const ih=it.map(x=>`<div class="it" dir="auto">${x}</div>`);qb.push(stem+(ih[0]||''));for(let x=1;x<ih.length;x++)qb.push(ih[x])}
+  if(q.img){
+   if(!q.ia&&!IAQ.has(q)){IAQ.add(q);const im=new Image();im.onload=()=>{q.ia=im.width/im.height;prev()};im.src=q.img}
+   qb.push(`<div class="qi"><img src="${q.img}" style="width:${q.isz}%;aspect-ratio:${q.ia||1.5}"></div>`)}
+  qb[qb.length-1]+='<div class="sep"></div>';
+  qb.forEach(x=>blocks.push(x))});
+ const p1=$('ft1').value.trim(),p2=$('ft2').value.trim();
+ const ph=(lang==='en'&&p1===LB.ar.l)?L.l:p1,lb=(lang==='en'&&p2===LB.ar.tn)?L.tn:(p2||L.tn);
+ const ft=`<div class="ft"><span dir="auto"><span data-f="ft1">${fmt(esc(ph))}</span></span><span dir="auto">${$('tn').value?'<span data-f="ft2">'+fmt(esc(lb))+'</span>: '+vs('tn'):''}</span></div>`;
+ MODEL={head:head,blocks:blocks,ft:ft};
+ fit();
+}
+
+function setL(){lang=$('lg').value;draw()}
+function setF(){F.family=$('ff').value;F.weight=$('fw').value;fit()}
+function sz(d){F.size=Math.max(8,Math.min(26,curFont+d));F.auto=false;$('fa').checked=false;fit()}
+function col(c){F.color=c;fit()}
+function fit(){
+ $('mgb').innerHTML=[[4,'ضيق جداً'],[7,'ضيق'],[10,'عادي'],[15,'واسع'],[20,'أوسع']].map(a=>`<button class="o ${a[0]===F.mg?'on':''}" onclick="F.mg=${a[0]};fit()">${a[1]}</button>`).join('');
+ $('lsb').innerHTML=[1,1.15,1.25,1.5,1.85,2].map(v=>`<button class="o ${v===F.ls?'on':''}" onclick="F.ls=${v};fit()">${v===1?'1.0':v===1.85?'1.85 (افتراضي)':v}</button>`).join('');
+ $('sw').innerHTML=COLS.map(c=>`<b class="${c===F.color?'on':''}" style="background:${c}" onclick="col('${c}')"></b>`).join('');
+ $('sw3').innerHTML=BGS.map(c=>`<b class="${c===(F.bg||'#ffffff')?'on':''}" style="background:${c}" onclick="F.bg='${c}';fit()"></b>`).join('');
+ $('sw4').innerHTML=WCOLS.map(c=>`<b class="${c===F.wc?'on':''}" style="background:${c}" onclick="F.wc='${c}';fit()"></b>`).join('');
+ try{localStorage.setItem('exam3',JSON.stringify({v:7,Q,Logo,lang,F,fv:fvals()}))}catch(e){}
+ layout();
+ $('fsv').textContent=curFont;$('fr').value=curFont;
+}
+function scal(){
+ const W=793.7,H=1122.5,G=14,pg=[].slice.call($('wrap').children),sc=Math.min(1,(document.documentElement.clientWidth-24)/W);
+ pg.forEach((e,i)=>{e.style.transform='scale('+sc+')';e.style.top=(i*(H+G)*sc)+'px'});
+ $('wrap').style.width=W*sc+'px';$('wrap').style.height=((pg.length*H+(pg.length-1)*G)*sc)+'px';
+}
+window.addEventListener('resize',scal);
+
+window.addEventListener('afterprint',scal);
+document.querySelectorAll('.card input[id]').forEach(i=>i.addEventListener('input',prev));
+function sty(sp){
+ let o=[];sp.split(';').forEach(p=>{p=p.trim();
+  if(p.startsWith('c=')&&/^#[0-9a-f]{3,8}$/i.test(p.slice(2)))o.push('color:'+p.slice(2));
+  else if(p.startsWith('z=')&&+p.slice(2)>0)o.push('font-size:'+(+p.slice(2))+'%');
+  else if(p==='b')o.push('font-weight:700');
+  else if(p==='n')o.push('font-weight:400');
+  else if(p==='u')o.push('text-decoration:underline')});
+ return o.join(';')}
+function fmt(t){
+ let n=0;
+ while(n++<10&&t.indexOf('{{')>-1){
+  const r=t.replace(/\{\{([^{}:]*):([^{}]*)\}\}/g,(m,sp,x)=>'<span style="'+sty(sp)+'">'+x+'</span>');
+  if(r===t)break;t=r}
+ return t}
+let sel=null,psel=null,lastSel='';
+const TBT='✂️ تنسيق الجزء المحدد (من الأسئلة أو من الورقة)';
+function fvals(){const o={};['r1','r2','c2','c3','c4','l1','l2','l3','l4','tn','nt','ft1','ft2'].forEach(id=>{o[id]=$(id).value});return o}
+function composeC4(){$('c4').value=[$('c4w').value,$('c4n').value].filter(Boolean).join(' ')}
+function setC4(){composeC4();prev()}
+function syncC4(){const v=strip($('c4').value);$('c4w').value=v.indexOf('الشهر')>-1?'الشهر':(v.indexOf('الدور')>-1?'الدور':'');$('c4n').value=/الثالث/.test(v)?'الثالث':/الثاني/.test(v)?'الثاني':/(الأول|الاول)/.test(v)?'الأول':'';composeC4()}
+let rt=null;
+function askReset(b){
+ if(!rt){b.textContent='⚠️ اضغط مرة ثانية للتأكيد';rt=setTimeout(()=>{b.textContent='🔄 تفريغ المحتوى';rt=null},4000);return}
+ clearTimeout(rt);rt=null;doReset();b.textContent='✓ تم التفريغ';setTimeout(()=>{b.textContent='🔄 تفريغ المحتوى'},2000)}
+function doReset(){
+ const d={r1:'إدارة',r2:'',c2:'أسئلة امتحانات ',c3:'',l1:'',l2:'',l3:'',l4:'',tn:'',nt:'',ft1:'',ft2:'مدرس المادة'};
+ Object.keys(d).forEach(k=>{$(k).value=d[k]});
+ $('c4w').value='الدور';$('c4n').value='الأول';composeC4();
+ Q=[{t:'',inl:false,img:'',isz:50}];Logo='';F.wt='';F.wmi='';$('wt').value='';
+ sel=null;psel=null;lastSel='';draw()}
+function scan(str){const m=[];let i=0,d=0;
+ while(i<str.length){const t=str.slice(i).match(/^\{\{[^{}:]*:/);
+  if(t){i+=t[0].length;d++;continue}
+  if(d>0&&str.startsWith('}}',i)){i+=2;d--;continue}
+  m.push(i);i++}
+ return m}
+function balanced(seg){let i=0,d=0;
+ while(i<seg.length){const t=seg.slice(i).match(/^\{\{[^{}:]*:/);
+  if(t){i+=t[0].length;d++;continue}
+  if(seg.startsWith('}}',i)){if(d===0)return false;i+=2;d--;continue}
+  i++}
+ return d===0}
+function strip(seg){let n=0;while(n++<10)seg=seg.replace(/\{\{[^{}:]*:([^{}]*)\}\}/g,'$1');return seg}
+function expand(v,a,b){
+ for(;;){const m=v.slice(0,a).match(/\{\{[^{}:]*:$/);
+  if(m&&v.startsWith('}}',b)){a-=m[0].length;b+=2}else break}
+ return [a,b]}
+function off(sp,node,o){const r=document.createRange();r.selectNodeContents(sp);r.setEnd(node,o);return r.toString().length}
+function pvTargets(){
+ const g=window.getSelection();if(!g||!g.rangeCount||g.isCollapsed)return null;
+ const r=g.getRangeAt(0);if(!$('wrap').contains(r.commonAncestorContainer))return null;
+ const out=[];
+ $('wrap').querySelectorAll('[data-q],[data-f]').forEach(sp=>{
+  if(!r.intersectsNode(sp))return;
+  let a=0,b=sp.textContent.length;
+  if(sp.contains(r.startContainer))a=off(sp,r.startContainer,r.startOffset);
+  if(sp.contains(r.endContainer))b=off(sp,r.endContainer,r.endOffset);
+  if(b>a)out.push({q:sp.dataset.q,l:sp.dataset.l,o:+sp.dataset.o,f:sp.dataset.f,a:a,b:b,t:sp.textContent})});
+ return out.length?out:null}
+document.addEventListener('selectionchange',()=>{
+ const el=document.activeElement;
+ if(el&&el.selectionStart!=null&&(el.tagName==='TEXTAREA'||(el.tagName==='INPUT'&&el.type==='text'))){
+  sel={el:el,s:el.selectionStart,e:el.selectionEnd};
+  if(sel.s!==sel.e)lastSel='ta'}
+ else{const t=pvTargets();if(t){psel=t;lastSel='pv'}}});
+function tbmsg(m){const e=$('tbm');e.textContent=m;setTimeout(()=>{e.textContent=TBT},2800)}
+function applyPv(spec,clear){
+ let bad=0,done=0;
+ psel.forEach(t=>{
+  let el,str,lines=null,line='';
+  if(t.f){el=$(t.f);if(!el)return;str=el.value}
+  else{el=$('qs').querySelectorAll('textarea')[t.q];if(!el)return;lines=el.value.split('\n');line=lines[t.l]||'';str=line.slice(t.o)}
+  const map=scan(str),pl=map.map(i=>str[i]).join('');
+  if(pl.slice(0,t.t.length)!==t.t||map[t.b-1]===undefined){bad++;return}
+  let st=map[t.a],en=map[t.b-1]+1;
+  if(clear){const x=expand(str,st,en);st=x[0];en=x[1]}
+  const seg=str.slice(st,en);
+  if(!balanced(seg)){bad++;return}
+  const s2=str.slice(0,st)+(clear?strip(seg):'{{'+spec+':'+seg+'}}')+str.slice(en);
+  if(t.f)el.value=s2;else{lines[t.l]=line.slice(0,t.o)+s2;el.value=lines.join('\n')}
+  el.dispatchEvent(new Event('input',{bubbles:true}));done++});
+ psel=null;lastSel='';sel=null;$('tb').open=false;
+ tbmsg(done?(bad?'✓ طُبّق على جزء وتعذّر جزء يقطع تنسيقاً سابقاً':(clear?'✓ تم مسح التنسيق':'✓ تم التطبيق')):'تعذّر التطبيق: حدّد كلمات كاملة أو داخل نفس التنسيق')}
+function wrap(spec){
+ if(lastSel==='pv'&&psel)return applyPv(spec,false);
+ if(!sel||sel.s===sel.e){tbmsg('حدد نصاً أولاً (اضغط مطولاً على كلمة ثم اسحب)');return}
+ const el=sel.el,v=el.value,a=sel.s,b=sel.e;
+ if(!balanced(v.slice(a,b))){tbmsg('التحديد يقطع تنسيقاً سابقاً، عدّل التحديد');return}
+ const out=v.slice(a,b).split('\n').map(l=>{
+  if(!l.trim())return l;
+  const m=l.match(/^(\s*[-*]\s?)([\s\S]*)$/);
+  const pre=m?m[1]:'',body=m?m[2]:l;
+  return body.trim()?pre+'{{'+spec+':'+body+'}}':l}).join('\n');
+ el.value=v.slice(0,a)+out+v.slice(b);
+ el.dispatchEvent(new Event('input',{bubbles:true}));
+ sel=null;lastSel='';$('tb').open=false;tbmsg('✓ تم التطبيق على الجزء المحدد')}
+function unwrap(){
+ if(lastSel==='pv'&&psel)return applyPv('',true);
+ if(!sel||sel.s===sel.e){tbmsg('حدد النص الي تريد تمسح تنسيقه');return}
+ const el=sel.el,v=el.value,x=expand(v,sel.s,sel.e);
+ el.value=v.slice(0,x[0])+strip(v.slice(x[0],x[1]))+v.slice(x[1]);
+ el.dispatchEvent(new Event('input',{bubbles:true}));sel=null;lastSel='';$('tb').open=false;tbmsg('✓ تم مسح التنسيق')}
+$('sw2').innerHTML=COLS.map(c=>`<b style="background:${c}" onmousedown="event.preventDefault()" onclick="wrap('c=${c}')"></b>`).join('');
+
+$('bs').value=F.bs;$('pgm').value=F.pm;$('nl').value=F.nl;$('wf').value=F.wf;$('bw').value=F.bw;$('wt').value=F.wt;$('wo').value=F.wo;$('wz').value=F.wz;$('wr').value=String(F.wr);
+if(FV)Object.keys(FV).forEach(id=>{if($(id))$(id).value=FV[id]});
+syncC4();
+$('lg').value=lang;$('ff').value=F.family;$('fw').value=F.weight;$('fa').checked=F.auto;
+draw();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>fit());
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
