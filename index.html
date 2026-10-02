@@ -462,6 +462,11 @@ details[open]>summary .si{transform:rotate(-8deg) scale(1.12)}
 .pn.float .sg{padding:5px 6px;margin:0 0 4px}
 .stk.cmp #pnls{display:block;max-height:0;margin:0;overflow:visible}
 .stk.cmp #pnls>.pn:not(.float){display:none}
+#cpv{position:relative;display:inline-block;max-width:100%;line-height:0;background:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%) 0 0/16px 16px;border-radius:6px;overflow:hidden}
+#cpv img{max-width:100%;max-height:42vh;display:block}
+#cpi{position:absolute;inset:0;width:100%;height:100%}
+#cpi0{opacity:.35}
+@media print{#lgfree{outline:none!important}}
 </style>
 <style id="fix-v2">
 /* ===== 1) تصغير واجهة الملف الشخصي (بدون حذف أي عنصر) ===== */
@@ -576,6 +581,16 @@ details[open]>summary .si{transform:rotate(-8deg) scale(1.12)}
  <textarea id="bkt" placeholder="الصق نص النسخة هنا" style="min-height:80px"></textarea>
  <div class="row"><button class="o" onclick="bkImport($('bkt').value)">⬇️ استيراد من النص</button><button class="d" onclick="bkClose()">إغلاق</button></div>
 </div></div>
+<div id="cp" class="noprint bkm" style="display:none"><div class="bkc">
+ <b>✂️ قص الصورة</b>
+ <div class="hint">حرّك المنزلقات لقص الأطراف. الجزء الباهت هو الذي سيُحذف.</div>
+ <div style="text-align:center"><div id="cpv"><img id="cpi0" alt=""><img id="cpi" alt=""></div></div>
+ <label>من الأعلى: <b id="cptv">0</b>%</label><input type="range" id="cpt" min="0" max="80" value="0" oninput="cropUpd()">
+ <label>من الأسفل: <b id="cpbv">0</b>%</label><input type="range" id="cpb" min="0" max="80" value="0" oninput="cropUpd()">
+ <label>من اليمين: <b id="cprv">0</b>%</label><input type="range" id="cpr" min="0" max="80" value="0" oninput="cropUpd()">
+ <label>من اليسار: <b id="cplv">0</b>%</label><input type="range" id="cpl" min="0" max="80" value="0" oninput="cropUpd()">
+ <div class="row"><button onclick="cropApply()">✅ تطبيق</button><button class="o" id="cpr0" onclick="cropReset()">↺ الأصل</button><button class="d" onclick="$('cp').style.display='none'">إلغاء</button></div>
+</div></div>
 <div id="sh" class="noprint bkm" style="display:none"><div class="bkc">
  <b>📤 مشاركة الامتحان</b>
  <div class="hint">اختر نوع الملف:<br>PDF يطابق شكل الورقة تماماً (يحتاج إنترنت أول مرة)، وWord قابل للتعديل (بدون العلامة المائية).</div>
@@ -585,7 +600,7 @@ details[open]>summary .si{transform:rotate(-8deg) scale(1.12)}
 <div id="welcome" class="noprint"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><div class="wc"><div class="fr f1" data-r="26"><svg><path pathLength="1"/></svg></div><div class="fr f2" data-r="35"><svg><path pathLength="1"/></svg></div>
  <div class="ic"><svg viewBox="0 0 100 80" width="60" height="48"><polygon points="50,8 96,30 50,52 4,30" pathLength="1"/><path d="M24 42 V58 C24 68 76 68 76 58 V42" pathLength="1"/><g class="tas"><path d="M90 33 V58" pathLength="1"/><circle cx="90" cy="62" r="4"/></g></svg></div>
  <div class="t">منسّق الأسئلة <mark>الامتحانية</mark></div>
- <div class="t2">أعدّ ورقتك الامتحانية بشكل أنيق وجاهز للطباعة</div>
+ <div class="t2">أعدّ ورقتك الامتحانية بشكل أنيق وجاهز للطباعة<br><small style="opacity:.7">الإصدار 2.2</small></div>
  <div class="orn"></div>
  <div class="by">إعداد الأستاذ</div>
  <div class="nm">لؤي حميد الياسري</div>
@@ -620,6 +635,13 @@ details[open]>summary .si{transform:rotate(-8deg) scale(1.12)}
   <div><label>لغة الورقة / Language</label><select id="lg" onchange="setL()"><option value="ar">العربية</option><option value="en">English</option></select></div>
   <div><label>شعار المدرسة</label><div class="row" style="margin:0"><label class="btn sm"><input type="file" accept="image/*" style="display:none" onchange="load(this,'logo')">🖼️ إضافة</label><button class="d" onclick="Logo='';prev()">✕</button></div></div>
  </div>
+  <div id="lgc" style="display:none;margin-top:6px">
+   <div class="gt">🖼️ ضبط الشعار</div>
+   <label>الحجم: <b id="lgv"></b> ملم</label><input type="range" id="lgh" min="8" max="70" oninput="LGs('h',+this.value)">
+   <label style="margin-top:6px">الموقع على الورقة</label><select id="lgp" onchange="LGs('pos',this.value)"><option value="c">وسط الترويسة</option><option value="r">أعلى اليمين</option><option value="l">أعلى اليسار</option><option value="f">حر (تحدد مكانه بنفسك)</option></select>
+   <div id="lgf" style="display:none"><label>أفقياً: <b id="lgxv"></b>%</label><input type="range" id="lgx" min="0" max="100" oninput="LGs('x',+this.value)"><label>عمودياً: <b id="lgyv"></b>%</label><input type="range" id="lgy" min="0" max="95" oninput="LGs('y',+this.value)"></div>
+   <div class="row"><button class="o" onclick="cropOpen('logo')">✂️ قص الشعار</button></div>
+  </div>
   <div class="grid" style="margin-top:6px">
   <div><label>الإدارة</label><select id="r1s" onchange="setR1()"><option value="إدارة ثانوية">إدارة ثانوية</option><option value="إدارة إعدادية">إدارة إعدادية</option><option value="إدارة متوسطة">إدارة متوسطة</option><option value="إدارة ابتدائية">إدارة ابتدائية</option><option value="مدرسة">مدرسة</option><option value="__c">✎ كتابة يدوية</option></select><input id="r1" type="hidden" value="إدارة ثانوية"></div>
 
@@ -806,6 +828,7 @@ function layout(){
  $('wrap').innerHTML='';
  let f=F.size;curFont=f;
  let p=mkPage();
+ if(Logo&&LG().pos==='f'){const g=LG();p.parentNode.insertAdjacentHTML('beforeend','<img id="lgfree" src="'+Logo+'" title="اسحب لتحريك الشعار" style="position:absolute;z-index:3;height:'+g.h+'mm;left:'+g.x+'%;top:'+g.y+'%;transform:translateX(-50%);cursor:move;touch-action:none;outline:1px dashed #38bdf8">')}
  p.insertAdjacentHTML('beforeend','<div class="blk">'+MODEL.head+'</div>');
  if(F.pm==='one'){
   p.insertAdjacentHTML('beforeend',MODEL.blocks.map(b=>'<div class="blk">'+b+'</div>').join('')+MODEL.ft);
@@ -823,6 +846,54 @@ function layout(){
  }
  applyWM();scal();applyLock();updStat();
 }
+
+
+(function(){let d=null;
+ document.addEventListener('pointerdown',e=>{const im=e.target.closest&&e.target.closest('#lgfree');if(!im)return;e.preventDefault();d={im:im,pg:im.parentNode};try{im.setPointerCapture(e.pointerId)}catch(_){}});
+ document.addEventListener('pointermove',e=>{if(!d)return;const r=d.pg.getBoundingClientRect();
+  const x=Math.max(0,Math.min(100,Math.round((e.clientX-r.left)/r.width*100))),
+        y=Math.max(0,Math.min(95,Math.round((e.clientY-r.top)/r.height*100)));
+  d.im.style.left=x+'%';d.im.style.top=y+'%';d.x=x;d.y=y});
+ document.addEventListener('pointerup',()=>{if(!d)return;const g=LG();if(d.x!=null){g.x=d.x;g.y=d.y;F.lg=g;lgUI()}d=null;prev()});
+})();
+let LogoO='',CP=null;const ORIG=new WeakMap();
+function LG(){return Object.assign({h:18,pos:'c',x:50,y:4},F.lg||{})}
+function LGs(k,v){const g=LG();g[k]=v;F.lg=g;prev()}
+function lgH(p){const g=LG();return Logo&&g.pos===p?'<img src="'+Logo+'" style="height:'+g.h+'mm"><br>':''}
+function lgUI(){
+ const c=$('lgc');if(!c)return;const g=LG();
+ c.style.display=Logo?'':'none';
+ $('lgh').value=g.h;$('lgv').textContent=g.h;$('lgp').value=g.pos;
+ $('lgf').style.display=g.pos==='f'?'':'none';
+ $('lgx').value=g.x;$('lgy').value=g.y;$('lgxv').textContent=g.x;$('lgyv').textContent=g.y}
+function cropOpen(t){
+ const src=t==='logo'?Logo:Q[t].img;if(!src)return;
+ CP={t:t};$('cpi0').src=src;$('cpi').src=src;
+ ['cpt','cpb','cpr','cpl'].forEach(id=>{$(id).value=0});
+ $('cpr0').style.display=(t==='logo'?LogoO:ORIG.get(Q[t]))?'':'none';
+ cropUpd();$('cp').style.display='flex'}
+function cropUpd(){
+ const g=id=>+$(id).value;
+ ['t','b','r','l'].forEach(k=>{$('cp'+k+'v').textContent=g('cp'+k)});
+ $('cpi').style.clipPath='inset('+g('cpt')+'% '+g('cpr')+'% '+g('cpb')+'% '+g('cpl')+'%)'}
+function cropApply(){
+ if(!CP)return;
+ const g=id=>+$(id).value,T=g('cpt'),B=g('cpb'),R=g('cpr'),Lf=g('cpl');
+ if(T+B>=95||R+Lf>=95){toast('القص كبير جداً');return}
+ const t=CP.t,src=t==='logo'?Logo:Q[t].img,im=new Image();
+ im.onload=()=>{
+  const W=im.naturalWidth,H=im.naturalHeight,x0=W*Lf/100,y0=H*T/100,w=W*(1-(Lf+R)/100),h=H*(1-(T+B)/100);
+  const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,x0,y0,w,h,0,0,c.width,c.height);
+  const u=c.toDataURL('image/jpeg',0.88);
+  if(t==='logo'){if(!LogoO)LogoO=Logo;Logo=u}
+  else{if(!ORIG.has(Q[t]))ORIG.set(Q[t],Q[t].img);Q[t].img=u;Q[t].ia=c.width/c.height}
+  $('cp').style.display='none';draw()};
+ im.src=src}
+function cropReset(){
+ if(!CP)return;const t=CP.t,o=t==='logo'?LogoO:ORIG.get(Q[t]);if(!o)return;
+ if(t==='logo'){Logo=o;LogoO=''}else{Q[t].img=o;ORIG.delete(Q[t]);Q[t].ia=0;IAQ.delete(Q[t])}
+ $('cp').style.display='none';draw()}
 function load(inp,t){
  const f=inp.files[0];if(!f)return;
  const r=new FileReader();
@@ -830,8 +901,9 @@ function load(inp,t){
   const m=900,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');
   c.width=im.width*k;c.height=im.height*k;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
   const u=c.toDataURL('image/jpeg',0.8);
-  if(t==='logo')Logo=u;else if(t==='wm')F.wmi=u;else{Q[t].img=u;Q[t].ia=c.width/c.height}
-  draw()};im.src=r.result};
+  if(t==='logo'){Logo=u;LogoO=''}else if(t==='wm')F.wmi=u;else{Q[t].img=u;Q[t].ia=c.width/c.height;ORIG.delete(Q[t])}
+  draw();
+  if(t==='logo'||t!=='wm')setTimeout(()=>{const e=t==='logo'?$('lgc'):$('qs').children[t];if(e){e.style.scrollMarginTop='150px';e.scrollIntoView({behavior:'smooth',block:'start'});toast(t==='logo'?'✂️ اضبط حجم الشعار وموقعه وقصه من هنا':'✂️ تحكم بحجم الصورة وموقعها وقصها تحت السؤال')}},250)};im.src=r.result};
  r.readAsDataURL(f)}
 
 function addQ(f){Q.push({t:"",inl:false,img:'',isz:50,free:!!f});NEWQ=Q.length-1;draw()}
@@ -843,18 +915,18 @@ function draw(){
  <label class="btn sm" title="${q.img?'تغيير الصورة':'إضافة صورة'}"><input type="file" accept="image/*" style="display:none" onchange="load(this,${i})">🖼️</label>
  <button class="o" style="padding:4px 9px" ${i?'':'disabled'} onclick="moveQ(${i},-1)">↑</button><button class="o" style="padding:4px 9px" ${i<Q.length-1?'':'disabled'} onclick="moveQ(${i},1)">↓</button><button class="o" style="padding:4px 9px" onclick="dupQ(${i})">⧉</button><button class="d" onclick="del(${i})">حذف</button></div>
  <textarea dir="auto" oninput="Q[${i}].t=this.value;grow(this);prev()">${esc(q.t)}</textarea>
- ${q.img?`<div class="row" style="margin:4px 0 0;font-size:12px"><span>🖼️ حجم الصورة</span><input type="range" min="15" max="100" value="${q.isz}" style="width:110px;padding:0" oninput="Q[${i}].isz=+this.value;prev()"><button class="d" style="padding:1px 8px" onclick="Q[${i}].img='';draw()">✕</button></div>`:''}</div>`).join('');
+ ${q.img?`<div class="row" style="margin:4px 0 0;font-size:12px;gap:6px"><span>🖼️ الحجم</span><input type="range" min="10" max="100" value="${q.isz}" style="width:90px;padding:0" oninput="Q[${i}].isz=+this.value;prev()"><select style="width:auto;padding:3px;font-size:12px" onchange="Q[${i}].iAl=this.value;prev()"><option value="c" ${(q.iAl||'c')==='c'?'selected':''}>وسط</option><option value="r" ${q.iAl==='r'?'selected':''}>يمين</option><option value="l" ${q.iAl==='l'?'selected':''}>يسار</option></select><select style="width:auto;padding:3px;font-size:12px" onchange="Q[${i}].iPl=this.value;prev()"><option value="end" ${q.iPl!=='stem'?'selected':''}>بعد الفقرات</option><option value="stem" ${q.iPl==='stem'?'selected':''}>بعد نص السؤال</option></select><span>↔</span><input type="range" min="-40" max="40" value="${q.iX||0}" title="إزاحة أفقية" style="width:70px;padding:0" oninput="Q[${i}].iX=+this.value;prev()"><span>↕</span><input type="range" min="0" max="40" value="${q.iM||0}" title="مسافة حول الصورة" style="width:60px;padding:0" oninput="Q[${i}].iM=+this.value;prev()"><button class="o" style="padding:2px 8px" onclick="cropOpen(${i})">✂️ قص</button><button class="d" style="padding:1px 8px" onclick="Q[${i}].img='';draw()">✕</button></div>`:''}</div>`).join('');
  document.querySelectorAll('#qs textarea').forEach(grow);
  {const c=$('qs').children[NEWQ];if(c&&NEWQ>=0)c.classList.add('new');NEWQ=-1}
  prev();
 }
 function prev(){
- uiLang();
+ uiLang();lgUI();
  const v=id=>fmt(esc($(id).value)),L=LB[lang];
  const vs=id=>'<span data-f="'+id+'" data-ph="'+phOf(id)+'" contenteditable="true" spellcheck="false">'+v(id)+'</span>';
- const head=`<div class="hd"><div>${vs('r1')}<br>${vs('r2')}</div>
- <div class="c">${Logo?`<img src="${Logo}"><br>`:''}${$('op').value.trim()?vs('op')+'<br>':''}${vs('c2')}<br>${vs('c3')}<br>${vs('c4')}${VL()}</div>
- <div class="l">${L.s}: ${vs('l1')}<br>${L.c}: ${vs('l2')}<br>${L.t}: ${vs('l3')}<br>${L.d}: ${vs('l4')}</div></div>
+ const head=`<div class="hd"><div>${lgH('r')}${vs('r1')}<br>${vs('r2')}</div>
+ <div class="c">${lgH('c')}${$('op').value.trim()?vs('op')+'<br>':''}${vs('c2')}<br>${vs('c3')}<br>${vs('c4')}${VL()}</div>
+ <div class="l">${lgH('l')}${L.s}: ${vs('l1')}<br>${L.c}: ${vs('l2')}<br>${L.t}: ${vs('l3')}<br>${L.d}: ${vs('l4')}</div></div>
  <div class="hr"></div>${$('nt').value.trim()?`<div class="note" dir="auto" style="${noteSty()}">${vs('nt')}</div>`:''}`;
  const blocks=[];
  ordOf().forEach(i=>{const q=Q[i];
@@ -869,11 +941,19 @@ function prev(){
    else it.push(sp(o,0,l))});
   const stem=`<div class="qt${so?FX(so):''}" dir="auto"${AS(so&&so.a)}>${q.free?'':L.q+qnoD(i)+'/ '}${so?sp(so,0,so.t):PHS(i,q)}</div>`;
   const qb=[];
-  if(q.inl&&it.length)qb.push(stem+`<div class="inl" dir="auto">${it.map(x=>`<span>${x}</span>`).join('')}</div>`);
-  else{const ih=it.map((x,i2)=>`<div class="it${FX(ls[i2])}" dir="auto"${AS(ia[i2])}>${x}</div>`);qb.push(stem+(ih[0]||''));for(let x=1;x<ih.length;x++)qb.push(ih[x])}
+  let imgB='';
   if(q.img){
    if(!q.ia&&!IAQ.has(q)){IAQ.add(q);const im=new Image();im.onload=()=>{q.ia=im.width/im.height;prev()};im.src=q.img}
-   qb.push(`<div class="qi"><img src="${q.img}" style="width:${q.isz}%;aspect-ratio:${q.ia||1.5}"></div>`)}
+   imgB=`<div class="qi" style="text-align:${({r:'right',l:'left'})[q.iAl]||'center'};margin:${q.iM||0}px 0"><img src="${q.img}" style="width:${q.isz}%;aspect-ratio:${q.ia||1.5};position:relative;left:${q.iX||0}%"></div>`}
+  const early=!!q.img&&q.iPl==='stem';
+  if(q.inl&&it.length){
+   const inlH=`<div class="inl" dir="auto">${it.map(x=>`<span>${x}</span>`).join('')}</div>`;
+   if(early){qb.push(stem);qb.push(imgB);qb.push(inlH)}else qb.push(stem+inlH)}
+  else{
+   const ih=it.map((x,i2)=>`<div class="it${FX(ls[i2])}" dir="auto"${AS(ia[i2])}>${x}</div>`);
+   if(early){qb.push(stem);qb.push(imgB);ih.forEach(x=>qb.push(x))}
+   else{qb.push(stem+(ih[0]||''));for(let x=1;x<ih.length;x++)qb.push(ih[x])}}
+  if(imgB&&!early)qb.push(imgB);
   if(!q.free)qb[qb.length-1]+='<div class="sep"></div>';
   qb.forEach(x=>blocks.push(x))});
  const p1=$('ft1').value.trim(),p2=$('ft2').value.trim();
